@@ -1,8 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
-import hero from "@/assets/hero.jpg";
-import cricket from "@/assets/cricket.jpg";
-import coaching from "@/assets/coaching.jpg";
+import heroAsset from "@/assets/stadium.png.asset.json";
+import footballAsset from "@/assets/football.png.asset.json";
+import runnerAsset from "@/assets/runner.png.asset.json";
+
+const hero = heroAsset.url;
+const cricket = footballAsset.url;
+const coaching = runnerAsset.url;
 import { SiteHeader, SiteFooter, meta } from "@/components/site/SiteLayout";
 
 export const Route = createFileRoute("/")({

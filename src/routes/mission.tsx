@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, Prose, meta } from "@/components/site/SiteLayout";
-import coaching from "@/assets/coaching.jpg";
+import runnerAsset from "@/assets/runner.png.asset.json";
+
+const coaching = runnerAsset.url;
 
 export const Route = createFileRoute("/mission")({
   head: () => meta("Our mission and vision", "Why Mehfooz Maidan exists: opportunity, legal protection and accountability in Pakistani sport."),
