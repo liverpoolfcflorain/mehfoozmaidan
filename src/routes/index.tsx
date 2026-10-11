@@ -1,8 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
-import hero from "@/assets/hero.jpg";
-import cricket from "@/assets/cricket.jpg";
-import coaching from "@/assets/coaching.jpg";
+import heroAsset from "@/assets/stadium.png.asset.json";
+import footballAsset from "@/assets/football.png.asset.json";
+import runnerAsset from "@/assets/runner.png.asset.json";
+
+const hero = heroAsset.url;
+const cricket = footballAsset.url;
+const coaching = runnerAsset.url;
 import { SiteHeader, SiteFooter, meta } from "@/components/site/SiteLayout";
 
 export const Route = createFileRoute("/")({
@@ -24,7 +28,7 @@ function Home() {
       <section className="relative p-3 md:p-4">
         <SiteHeader overlay />
         <div className="relative h-[94vh] min-h-[640px] overflow-hidden rounded-[2rem]">
-          <img src={hero} alt="Field hockey player striking the ball at sunset" width={1920} height={1088} className="absolute inset-0 h-full w-full object-cover" />
+          <img src={hero} alt="Football stadium with a green pitch under a blue sky" width={1248} height={700} className="absolute inset-0 h-full w-full object-cover" />
           <div className="absolute inset-0 bg-charcoal/25" />
           <div className="relative flex h-full flex-col justify-between px-6 pb-8 pt-36 text-on-image md:px-12">
             <div className="max-w-3xl">
@@ -65,7 +69,7 @@ function Home() {
 
       <section className="mx-auto grid max-w-7xl gap-6 px-6 pt-32 md:grid-cols-12 md:px-8">
         <div className="relative overflow-hidden rounded-3xl md:col-span-5">
-          <img src={cricket} alt="Young cricketer batting in the nets" loading="lazy" width={1200} height={1504} className="h-full w-full object-cover" />
+          <img src={cricket} alt="Football players challenging for the ball during a match" loading="lazy" width={500} height={888} className="h-full w-full object-cover" />
         </div>
         <div className="flex flex-col gap-6 md:col-span-7">
           <div className="rounded-3xl bg-card p-10 md:p-14">
@@ -77,7 +81,7 @@ function Home() {
             <Link to="/mission" className="mt-8 inline-flex items-center gap-2 font-semibold text-primary">Read our mission <ArrowRight size={16} /></Link>
           </div>
           <div className="relative min-h-[280px] flex-1 overflow-hidden rounded-3xl">
-            <img src={coaching} alt="Athlete and coach reviewing a document trackside" loading="lazy" width={1504} height={1008} className="absolute inset-0 h-full w-full object-cover" />
+            <img src={coaching} alt="Young athlete sprinting on an athletics track" loading="lazy" width={1920} height={1437} className="absolute inset-0 h-full w-full object-cover" />
             <div className="glass-dark absolute bottom-5 left-5 right-5 rounded-2xl p-5 md:right-auto md:max-w-xs">
               <p className="text-sm font-semibold">Contract Studio</p>
               <p className="mt-1 text-sm opacity-80">Draft with AI, then request review from a verified lawyer. Drafts are never presented as legal approval.</p>
