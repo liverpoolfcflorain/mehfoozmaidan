@@ -8,7 +8,7 @@ export const Route = createFileRoute("/mission")({
   head: () => meta("Our mission and vision", "Why Mehfooz Maidan exists: opportunity, legal protection and accountability in Pakistani sport."),
   component: () => (
     <PageShell eyebrow="Mission & vision" title="Every athlete deserves protected ground." intro="Mehfooz Maidan exists to make sporting opportunity easier to discover, professional relationships more transparent, and legal help more accessible across Pakistan.">
-      <img src={coaching} alt="Coach and athlete reviewing paperwork" loading="lazy" width={1504} height={1008} className="mb-24 aspect-[21/9] w-full rounded-3xl object-cover" />
+      <img src={coaching} alt="Young athlete sprinting on an athletics track" loading="lazy" width={1920} height={1437} className="mb-24 aspect-[21/9] w-full rounded-3xl object-cover" />
       <Prose sections={[
         { h: "The problems we address", p: ["Access to opportunity: talented athletes often lack a credible way to show their ability to coaches, scouts, academies and boards.", "Legal protection: athletes and organisations sign agreements, sponsorships and payment arrangements without accessible advice.", "Trust: recruitment, credentials and contracts need verification, privacy and safeguards."] },
         { h: "Who we serve", p: ["Athletes at every level, sports professionals and organisations — coaches, scouts, clubs, academies, federations, schools and universities — and lawyers who want to support sport."] },
