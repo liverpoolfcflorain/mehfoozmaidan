@@ -10,19 +10,57 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AthleteRightsRouteImport } from './routes/athlete-rights'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as JoinRouteImport } from './routes/join'
+import { Route as LegalSupportRouteImport } from './routes/legal-support'
 import { Route as MissionRouteImport } from './routes/mission'
 import { Route as OpportunitiesRouteImport } from './routes/opportunities'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as StoriesRouteImport } from './routes/stories'
+import { Route as TermsRouteImport } from './routes/terms'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AthleteRightsRoute = AthleteRightsRouteImport.update({
+  id: '/athlete-rights',
+  path: '/athlete-rights',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DisclaimerRoute = DisclaimerRouteImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinRoute = JoinRouteImport.update({
+  id: '/join',
+  path: '/join',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalSupportRoute = LegalSupportRouteImport.update({
+  id: '/legal-support',
+  path: '/legal-support',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MissionRoute = MissionRouteImport.update({
@@ -35,54 +73,130 @@ const OpportunitiesRoute = OpportunitiesRouteImport.update({
   path: '/opportunities',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StoriesRoute = StoriesRouteImport.update({
   id: '/stories',
   path: '/stories',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/athlete-rights': typeof AthleteRightsRoute
+  '/contact': typeof ContactRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/join': typeof JoinRoute
+  '/legal-support': typeof LegalSupportRoute
   '/mission': typeof MissionRoute
   '/opportunities': typeof OpportunitiesRoute
+  '/privacy': typeof PrivacyRoute
   '/stories': typeof StoriesRoute
+  '/terms': typeof TermsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/athlete-rights': typeof AthleteRightsRoute
+  '/contact': typeof ContactRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/join': typeof JoinRoute
+  '/legal-support': typeof LegalSupportRoute
   '/mission': typeof MissionRoute
   '/opportunities': typeof OpportunitiesRoute
+  '/privacy': typeof PrivacyRoute
   '/stories': typeof StoriesRoute
+  '/terms': typeof TermsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/athlete-rights': typeof AthleteRightsRoute
+  '/contact': typeof ContactRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/join': typeof JoinRoute
+  '/legal-support': typeof LegalSupportRoute
   '/mission': typeof MissionRoute
   '/opportunities': typeof OpportunitiesRoute
+  '/privacy': typeof PrivacyRoute
   '/stories': typeof StoriesRoute
+  '/terms': typeof TermsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/how-it-works' | '/mission' | '/opportunities' | '/stories'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/athlete-rights'
+    | '/contact'
+    | '/disclaimer'
+    | '/how-it-works'
+    | '/join'
+    | '/legal-support'
+    | '/mission'
+    | '/opportunities'
+    | '/privacy'
+    | '/stories'
+    | '/terms'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/how-it-works' | '/mission' | '/opportunities' | '/stories'
+  to:
+    | '/'
+    | '/about'
+    | '/athlete-rights'
+    | '/contact'
+    | '/disclaimer'
+    | '/how-it-works'
+    | '/join'
+    | '/legal-support'
+    | '/mission'
+    | '/opportunities'
+    | '/privacy'
+    | '/stories'
+    | '/terms'
   id:
     | '__root__'
     | '/'
+    | '/about'
+    | '/athlete-rights'
+    | '/contact'
+    | '/disclaimer'
     | '/how-it-works'
+    | '/join'
+    | '/legal-support'
     | '/mission'
     | '/opportunities'
+    | '/privacy'
     | '/stories'
+    | '/terms'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  AthleteRightsRoute: typeof AthleteRightsRoute
+  ContactRoute: typeof ContactRoute
+  DisclaimerRoute: typeof DisclaimerRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  JoinRoute: typeof JoinRoute
+  LegalSupportRoute: typeof LegalSupportRoute
   MissionRoute: typeof MissionRoute
   OpportunitiesRoute: typeof OpportunitiesRoute
+  PrivacyRoute: typeof PrivacyRoute
   StoriesRoute: typeof StoriesRoute
+  TermsRoute: typeof TermsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -94,11 +208,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/athlete-rights': {
+      id: '/athlete-rights'
+      path: '/athlete-rights'
+      fullPath: '/athlete-rights'
+      preLoaderRoute: typeof AthleteRightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/disclaimer': {
+      id: '/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/disclaimer'
+      preLoaderRoute: typeof DisclaimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/how-it-works': {
       id: '/how-it-works'
       path: '/how-it-works'
       fullPath: '/how-it-works'
       preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join': {
+      id: '/join'
+      path: '/join'
+      fullPath: '/join'
+      preLoaderRoute: typeof JoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal-support': {
+      id: '/legal-support'
+      path: '/legal-support'
+      fullPath: '/legal-support'
+      preLoaderRoute: typeof LegalSupportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mission': {
@@ -115,6 +271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpportunitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stories': {
       id: '/stories'
       path: '/stories'
@@ -122,15 +285,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  AthleteRightsRoute: AthleteRightsRoute,
+  ContactRoute: ContactRoute,
+  DisclaimerRoute: DisclaimerRoute,
   HowItWorksRoute: HowItWorksRoute,
+  JoinRoute: JoinRoute,
+  LegalSupportRoute: LegalSupportRoute,
   MissionRoute: MissionRoute,
   OpportunitiesRoute: OpportunitiesRoute,
+  PrivacyRoute: PrivacyRoute,
   StoriesRoute: StoriesRoute,
+  TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
