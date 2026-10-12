@@ -22,6 +22,9 @@ import { Route as OpportunitiesRouteImport } from './routes/opportunities'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as StoriesRouteImport } from './routes/stories'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as RoleIndexRouteImport } from './routes/$role.index'
+import { Route as RoleSectionRouteImport } from './routes/$role.$section'
+import { Route as RoleLoginRouteImport } from './routes/$role.login'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -88,6 +91,21 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RoleIndexRoute = RoleIndexRouteImport.update({
+  id: '/$role/',
+  path: '/$role/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoleSectionRoute = RoleSectionRouteImport.update({
+  id: '/$role/$section',
+  path: '/$role/$section',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoleLoginRoute = RoleLoginRouteImport.update({
+  id: '/$role/login',
+  path: '/$role/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -103,6 +121,9 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
+  '/$role/$section': typeof RoleSectionRoute
+  '/$role/login': typeof RoleLoginRoute
+  '/$role/': typeof RoleIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -118,6 +139,9 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
+  '/$role/$section': typeof RoleSectionRoute
+  '/$role/login': typeof RoleLoginRoute
+  '/$role': typeof RoleIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -134,6 +158,9 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
+  '/$role/$section': typeof RoleSectionRoute
+  '/$role/login': typeof RoleLoginRoute
+  '/$role/': typeof RoleIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -151,6 +178,9 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/stories'
     | '/terms'
+    | '/$role/$section'
+    | '/$role/login'
+    | '/$role/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -166,6 +196,9 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/stories'
     | '/terms'
+    | '/$role/$section'
+    | '/$role/login'
+    | '/$role'
   id:
     | '__root__'
     | '/'
@@ -181,6 +214,9 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/stories'
     | '/terms'
+    | '/$role/$section'
+    | '/$role/login'
+    | '/$role/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -197,6 +233,9 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   StoriesRoute: typeof StoriesRoute
   TermsRoute: typeof TermsRoute
+  RoleSectionRoute: typeof RoleSectionRoute
+  RoleLoginRoute: typeof RoleLoginRoute
+  RoleIndexRoute: typeof RoleIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -292,6 +331,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$role/': {
+      id: '/$role/'
+      path: '/$role'
+      fullPath: '/$role/'
+      preLoaderRoute: typeof RoleIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$role/$section': {
+      id: '/$role/$section'
+      path: '/$role/$section'
+      fullPath: '/$role/$section'
+      preLoaderRoute: typeof RoleSectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$role/login': {
+      id: '/$role/login'
+      path: '/$role/login'
+      fullPath: '/$role/login'
+      preLoaderRoute: typeof RoleLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -309,6 +369,9 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   StoriesRoute: StoriesRoute,
   TermsRoute: TermsRoute,
+  RoleSectionRoute: RoleSectionRoute,
+  RoleLoginRoute: RoleLoginRoute,
+  RoleIndexRoute: RoleIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
