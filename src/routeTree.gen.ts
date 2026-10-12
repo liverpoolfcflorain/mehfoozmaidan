@@ -20,8 +20,12 @@ import { Route as LegalSupportRouteImport } from './routes/legal-support'
 import { Route as MissionRouteImport } from './routes/mission'
 import { Route as OpportunitiesRouteImport } from './routes/opportunities'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as StoriesRouteImport } from './routes/stories'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as RoleIndexRouteImport } from './routes/$role.index'
+import { Route as RoleSectionRouteImport } from './routes/$role.$section'
+import { Route as RoleLoginRouteImport } from './routes/$role.login'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -78,6 +82,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StoriesRoute = StoriesRouteImport.update({
   id: '/stories',
   path: '/stories',
@@ -86,6 +95,21 @@ const StoriesRoute = StoriesRouteImport.update({
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoleIndexRoute = RoleIndexRouteImport.update({
+  id: '/$role/',
+  path: '/$role/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoleSectionRoute = RoleSectionRouteImport.update({
+  id: '/$role/$section',
+  path: '/$role/$section',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoleLoginRoute = RoleLoginRouteImport.update({
+  id: '/$role/login',
+  path: '/$role/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -101,8 +125,12 @@ export interface FileRoutesByFullPath {
   '/mission': typeof MissionRoute
   '/opportunities': typeof OpportunitiesRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
+  '/$role/$section': typeof RoleSectionRoute
+  '/$role/login': typeof RoleLoginRoute
+  '/$role/': typeof RoleIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -116,8 +144,12 @@ export interface FileRoutesByTo {
   '/mission': typeof MissionRoute
   '/opportunities': typeof OpportunitiesRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
+  '/$role/$section': typeof RoleSectionRoute
+  '/$role/login': typeof RoleLoginRoute
+  '/$role': typeof RoleIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -132,8 +164,12 @@ export interface FileRoutesById {
   '/mission': typeof MissionRoute
   '/opportunities': typeof OpportunitiesRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
+  '/$role/$section': typeof RoleSectionRoute
+  '/$role/login': typeof RoleLoginRoute
+  '/$role/': typeof RoleIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -149,8 +185,12 @@ export interface FileRouteTypes {
     | '/mission'
     | '/opportunities'
     | '/privacy'
+    | '/reset-password'
     | '/stories'
     | '/terms'
+    | '/$role/$section'
+    | '/$role/login'
+    | '/$role/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -164,8 +204,12 @@ export interface FileRouteTypes {
     | '/mission'
     | '/opportunities'
     | '/privacy'
+    | '/reset-password'
     | '/stories'
     | '/terms'
+    | '/$role/$section'
+    | '/$role/login'
+    | '/$role'
   id:
     | '__root__'
     | '/'
@@ -179,8 +223,12 @@ export interface FileRouteTypes {
     | '/mission'
     | '/opportunities'
     | '/privacy'
+    | '/reset-password'
     | '/stories'
     | '/terms'
+    | '/$role/$section'
+    | '/$role/login'
+    | '/$role/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -195,8 +243,12 @@ export interface RootRouteChildren {
   MissionRoute: typeof MissionRoute
   OpportunitiesRoute: typeof OpportunitiesRoute
   PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   StoriesRoute: typeof StoriesRoute
   TermsRoute: typeof TermsRoute
+  RoleSectionRoute: typeof RoleSectionRoute
+  RoleLoginRoute: typeof RoleLoginRoute
+  RoleIndexRoute: typeof RoleIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -278,6 +330,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stories': {
       id: '/stories'
       path: '/stories'
@@ -290,6 +349,27 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$role/': {
+      id: '/$role/'
+      path: '/$role'
+      fullPath: '/$role/'
+      preLoaderRoute: typeof RoleIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$role/$section': {
+      id: '/$role/$section'
+      path: '/$role/$section'
+      fullPath: '/$role/$section'
+      preLoaderRoute: typeof RoleSectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$role/login': {
+      id: '/$role/login'
+      path: '/$role/login'
+      fullPath: '/$role/login'
+      preLoaderRoute: typeof RoleLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -307,8 +387,12 @@ const rootRouteChildren: RootRouteChildren = {
   MissionRoute: MissionRoute,
   OpportunitiesRoute: OpportunitiesRoute,
   PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   StoriesRoute: StoriesRoute,
   TermsRoute: TermsRoute,
+  RoleSectionRoute: RoleSectionRoute,
+  RoleLoginRoute: RoleLoginRoute,
+  RoleIndexRoute: RoleIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
