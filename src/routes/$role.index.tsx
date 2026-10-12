@@ -4,5 +4,5 @@ import { PortalSection } from "@/components/app/PortalSection";
 export const Route = createFileRoute("/$role/")({
   beforeLoad: ({ params }) => { if (!["athlete", "sports", "lawyer", "admin"].includes(params.role)) throw notFound(); },
   head: () => ({ meta: [{ title: "Dashboard | Mehfooz Maidan" }, { name: "robots", content: "noindex" }] }),
-  component: () => <PortalSection role={Route.useParams().role} section="" />,
+  component: () => <PortalSection role={Route.useParams().role as any} section="" />,
 });

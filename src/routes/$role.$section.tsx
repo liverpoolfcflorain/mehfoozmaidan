@@ -6,6 +6,6 @@ export const Route = createFileRoute("/$role/$section")({
   head: () => ({ meta: [{ title: "Dashboard | Mehfooz Maidan" }, { name: "robots", content: "noindex" }] }),
   component: () => {
     const p = Route.useParams();
-    return <PortalSection role={p.role} section={p.section} />;
+    return <PortalSection role={p.role as any} section={p.section} />;
   },
 });

@@ -8,7 +8,7 @@ import { MessagesPage } from "./Messages";
 import { AssistantPage } from "./Assistant";
 import type { Role } from "./auth";
 
-function Body({ role, section }: { role: Role; section: string }) {
+function Body({ role, section }: { role: string; section: string }) {
   if (section === "profile") return <ProfileEditor role={role} />;
   if (section === "network") return <NetworkPage role={role} />;
   if (section === "messages") return <MessagesPage />;
@@ -39,6 +39,6 @@ function Body({ role, section }: { role: Role; section: string }) {
   );
 }
 
-export function PortalSection({ role, section }: { role: Role; section: string }) {
+export function PortalSection({ role, section }: { role: string; section: string }) {
   return <Portal role={role}><Body role={role} section={section} /></Portal>;
 }
