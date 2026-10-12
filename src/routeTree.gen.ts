@@ -20,6 +20,7 @@ import { Route as LegalSupportRouteImport } from './routes/legal-support'
 import { Route as MissionRouteImport } from './routes/mission'
 import { Route as OpportunitiesRouteImport } from './routes/opportunities'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as StoriesRouteImport } from './routes/stories'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as RoleIndexRouteImport } from './routes/$role.index'
@@ -81,6 +82,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StoriesRoute = StoriesRouteImport.update({
   id: '/stories',
   path: '/stories',
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/mission': typeof MissionRoute
   '/opportunities': typeof OpportunitiesRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
   '/$role/$section': typeof RoleSectionRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/mission': typeof MissionRoute
   '/opportunities': typeof OpportunitiesRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
   '/$role/$section': typeof RoleSectionRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/mission': typeof MissionRoute
   '/opportunities': typeof OpportunitiesRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
   '/$role/$section': typeof RoleSectionRoute
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/mission'
     | '/opportunities'
     | '/privacy'
+    | '/reset-password'
     | '/stories'
     | '/terms'
     | '/$role/$section'
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/mission'
     | '/opportunities'
     | '/privacy'
+    | '/reset-password'
     | '/stories'
     | '/terms'
     | '/$role/$section'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/mission'
     | '/opportunities'
     | '/privacy'
+    | '/reset-password'
     | '/stories'
     | '/terms'
     | '/$role/$section'
@@ -231,6 +243,7 @@ export interface RootRouteChildren {
   MissionRoute: typeof MissionRoute
   OpportunitiesRoute: typeof OpportunitiesRoute
   PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   StoriesRoute: typeof StoriesRoute
   TermsRoute: typeof TermsRoute
   RoleSectionRoute: typeof RoleSectionRoute
@@ -317,6 +330,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stories': {
       id: '/stories'
       path: '/stories'
@@ -367,6 +387,7 @@ const rootRouteChildren: RootRouteChildren = {
   MissionRoute: MissionRoute,
   OpportunitiesRoute: OpportunitiesRoute,
   PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   StoriesRoute: StoriesRoute,
   TermsRoute: TermsRoute,
   RoleSectionRoute: RoleSectionRoute,
