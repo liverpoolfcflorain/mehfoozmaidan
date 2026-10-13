@@ -7,6 +7,7 @@ import { Discover, NetworkPage } from "./Network";
 import { MessagesPage } from "./Messages";
 import { AssistantPage } from "./Assistant";
 import type { Role } from "./auth";
+import * as F from "./Features";
 
 function Body({ role, section }: { role: string; section: string }) {
   if (section === "profile") return <ProfileEditor role={role} />;
@@ -17,6 +18,24 @@ function Body({ role, section }: { role: string; section: string }) {
   if (role === "athlete" && section === "applications") return <AthleteApplications />;
   if (role === "sports" && section === "opportunities") return <SportsOpportunities />;
   if (role === "sports" && section === "discover") return <Discover role={role} tabs={["athletes", "sports", "lawyers"]} />;
+  if (section === "contracts") return role === "lawyer" ? <F.LawyerContracts /> : <F.ContractStudio />;
+  if (section === "legal") return <F.LegalRequests />;
+  if (section === "requests") return <F.LawyerRequests />;
+  if (section === "matters") return <F.LawyerRequests matters />;
+  if (section === "notifications") return <F.Notifications />;
+  if (section === "settings") return <F.Settings />;
+  if (role === "lawyer" && section === "discover") return <Discover role={role} tabs={["athletes", "sports", "lawyers"]} />;
+  if (role === "admin") {
+    if (!section) return <F.AdminStats />;
+    if (section === "verification") return <F.AdminPeople pendingOnly />;
+    if (section === "athletes") return <F.AdminPeople kind="athlete" />;
+    if (section === "sports") return <F.AdminPeople kind="sports" />;
+    if (section === "lawyers") return <F.AdminPeople kind="lawyer" />;
+    if (section === "reports") return <F.AdminReports />;
+    if (section === "content") return <F.AdminContent />;
+    if (section === "media") return <F.AdminMedia />;
+    if (section === "audit") return <F.AdminAudit />;
+  }
   const nav = portalNav[role];
   const item = nav.find((n) => n.to === `/${role}${section ? "/" + section : ""}`);
   if (!item) return <Empty title="Page not found" body="This section doesn't exist." />;

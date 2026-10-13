@@ -56,7 +56,7 @@ export const portalNav: Record<Role, NavItem[]> = {
     { to: "/admin/sports", label: "Sports & organisations" },
     { to: "/admin/lawyers", label: "Lawyers" },
     { to: "/admin/reports", label: "Reports & safeguarding" },
-    { to: "/admin/content", label: "Content" },
+    { to: "/admin/content", label: "Content & blog" },
     { to: "/admin/media", label: "Media & mission video" },
     { to: "/admin/audit", label: "Audit log" },
   ],
