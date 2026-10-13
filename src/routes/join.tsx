@@ -11,7 +11,6 @@ const roles = [
   ["athlete", "Athlete", "Build your sporting portfolio and discover opportunities.", "Join this portal →"],
   ["sports", "Sports professional or organisation", "Coaches, scouts, clubs, academies and boards.", "Join this portal →"],
   ["lawyer", "Lawyer", "Verified legal professionals supporting sport.", "Join this portal →"],
-  ["admin", "Administrator", "Platform staff managing verification, content and moderation.", "Sign in →"],
 ] as const;
 
 function Page() {
@@ -26,6 +25,7 @@ function Page() {
           </Link>
         ))}
       </div>
+      <Link to="/$role/login" params={{ role: "admin" }} className="mt-8 inline-block text-xs text-muted-foreground hover:text-foreground">Admin</Link>
     </PageShell>
   );
 }
