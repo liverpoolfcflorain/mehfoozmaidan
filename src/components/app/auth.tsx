@@ -61,6 +61,41 @@ const schema = z.object({
 });
 
 export function AuthForm({ role }: { role: Role }) {
+  if (role === "admin") return <AdminLogin />;
+  return <UserAuthForm role={role} />;
+}
+
+function AdminLogin() {
+  const [busy, setBusy] = useState(false);
+  const navigate = useNavigate();
+  async function submit(e) {
+    e.preventDefault();
+    const password = String(new FormData(e.currentTarget).get("password") ?? "");
+    setBusy(true);
+    try {
+      const { adminPasswordLogin } = await import("@/lib/admin.functions");
+      const { email } = await adminPasswordLogin({ data: { password } });
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      navigate({ to: "/admin" });
+    } catch (err) { toast.error(err?.message || "Incorrect password."); }
+    setBusy(false);
+  }
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-charcoal px-6 text-on-image">
+      <form onSubmit={submit} className="w-full max-w-sm">
+        <Wordmark light />
+        <h1 className="mt-10 text-4xl font-semibold">Admin access</h1>
+        <p className="mt-2 text-sm opacity-70">Enter the administrator password.</p>
+        <input name="password" type="password" required autoFocus aria-label="Admin password" className="mt-6 w-full rounded-xl border bg-background px-4 py-3 text-foreground" />
+        <button disabled={busy} className="mt-4 w-full rounded-full bg-gold px-6 py-3 font-semibold text-charcoal disabled:opacity-60">{busy ? "Checking…" : "Enter"}</button>
+        <Link to="/join" className="mt-6 block text-sm opacity-70">← Back</Link>
+      </form>
+    </div>
+  );
+}
+
+function UserAuthForm({ role }: { role: Role }) {
   const [mode, setMode] = useState<"signin" | "signup" | "reset">("signin");
   const [busy, setBusy] = useState(false);
   const [kind, setKind] = useState<"individual" | "organization">("individual");
