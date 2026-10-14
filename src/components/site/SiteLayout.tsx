@@ -9,6 +9,7 @@ export const navLinks = [
   { to: "/athlete-rights", label: "Athlete rights" },
   { to: "/legal-support", label: "Legal support" },
   { to: "/stories", label: "Stories" },
+  { to: "/blog", label: "Blog" },
 ] as const;
 
 export function Wordmark({ light = false }: { light?: boolean }) {
@@ -86,7 +87,7 @@ export function SiteFooter() {
   );
 }
 
-export function PageShell({ eyebrow, title, intro, children }: { eyebrow: string; title: string; intro?: string; children: ReactNode }) {
+export function PageShell({ eyebrow, title, intro, children }: { eyebrow: string; title: string; intro?: string | undefined; children: ReactNode }) {
   return (
     <div className="min-h-screen">
       <SiteHeader />
