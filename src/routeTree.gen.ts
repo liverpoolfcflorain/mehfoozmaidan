@@ -26,6 +26,8 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as RoleIndexRouteImport } from './routes/$role.index'
 import { Route as RoleSectionRouteImport } from './routes/$role.$section'
 import { Route as RoleLoginRouteImport } from './routes/$role.login'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -112,6 +114,16 @@ const RoleLoginRoute = RoleLoginRouteImport.update({
   path: '/$role/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -130,7 +142,9 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/$role/$section': typeof RoleSectionRoute
   '/$role/login': typeof RoleLoginRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/$role/': typeof RoleIndexRoute
+  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -149,7 +163,9 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/$role/$section': typeof RoleSectionRoute
   '/$role/login': typeof RoleLoginRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/$role': typeof RoleIndexRoute
+  '/blog': typeof BlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -169,7 +185,9 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/$role/$section': typeof RoleSectionRoute
   '/$role/login': typeof RoleLoginRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/$role/': typeof RoleIndexRoute
+  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -190,7 +208,9 @@ export interface FileRouteTypes {
     | '/terms'
     | '/$role/$section'
     | '/$role/login'
+    | '/blog/$slug'
     | '/$role/'
+    | '/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -209,7 +229,9 @@ export interface FileRouteTypes {
     | '/terms'
     | '/$role/$section'
     | '/$role/login'
+    | '/blog/$slug'
     | '/$role'
+    | '/blog'
   id:
     | '__root__'
     | '/'
@@ -228,7 +250,9 @@ export interface FileRouteTypes {
     | '/terms'
     | '/$role/$section'
     | '/$role/login'
+    | '/blog/$slug'
     | '/$role/'
+    | '/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -248,7 +272,9 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   RoleSectionRoute: typeof RoleSectionRoute
   RoleLoginRoute: typeof RoleLoginRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   RoleIndexRoute: typeof RoleIndexRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -372,6 +398,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoleLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -392,7 +432,9 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   RoleSectionRoute: RoleSectionRoute,
   RoleLoginRoute: RoleLoginRoute,
+  BlogSlugRoute: BlogSlugRoute,
   RoleIndexRoute: RoleIndexRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
