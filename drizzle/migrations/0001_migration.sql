@@ -1,0 +1,2 @@
+alter table public.site_content drop constraint site_content_section_check;
+alter table public.site_content add constraint site_content_section_check check (section in ('mission','athlete_rights','research','story','legal_explainer','homepage','blog','page'));
