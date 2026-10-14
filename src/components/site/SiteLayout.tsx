@@ -87,7 +87,7 @@ export function SiteFooter() {
   );
 }
 
-export function PageShell({ eyebrow, title, intro, children }: { eyebrow: string; title: string; intro?: string; children: ReactNode }) {
+export function PageShell({ eyebrow, title, intro, children }: { eyebrow: string; title: string; intro?: string | undefined; children: ReactNode }) {
   return (
     <div className="min-h-screen">
       <SiteHeader />
