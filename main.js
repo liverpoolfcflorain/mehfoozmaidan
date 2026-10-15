@@ -215,8 +215,12 @@ function anchor(href, label, extra = "") {
 async function loadConfig() {
   if (state.config) return state.config;
   const response = await fetch("/api/config");
-  state.config = await response.json();
   if (!response.ok) throw new Error("Could not load app configuration.");
+  try {
+    state.config = await response.json();
+  } catch {
+    throw new Error("The server API is not running. Deploy server.js on a Node host.");
+  }
   return state.config;
 }
 
@@ -505,7 +509,8 @@ function appPath() {
 
 function pathData() {
   const url = new URL(location.href);
-  const path = url.pathname.replace(/\/+$/, "") || "/";
+  // Treat /index.html (and /index.html/) as the home page, then drop trailing slashes.
+  const path = url.pathname.replace(/\/index\.html\/?$/i, "/").replace(/\/+$/, "") || "/";
   const match = path.match(/^\/(athlete|sports|lawyer|admin)(?:\/([^/]+))?$/);
   const login = path.match(/^\/(athlete|sports|lawyer|admin)\/login$/);
   return { path, query: url.searchParams, portal: match ? { role: match[1], section: match[2] || "" } : null, loginRole: login?.[1] || "" };
@@ -1055,7 +1060,7 @@ async function signIn(role, data) {
     return;
   }
   if (state.authMode === "reset") {
-    const config = await loadConfig();
+    await loadConfig();
     await authRequest(`/auth/v1/recover?redirect_to=${encodeURIComponent(`${location.origin}/reset-password`)}`, { email: data.email });
     toast("If that email is registered, a reset link is on its way.", "success");
     state.authMode = "signin";
@@ -1063,7 +1068,7 @@ async function signIn(role, data) {
     return;
   }
   if (state.authMode === "signup") {
-    const config = await loadConfig();
+    await loadConfig();
     const url = `/auth/v1/signup?redirect_to=${encodeURIComponent(`${location.origin}/${role}/login`)}`;
     await authRequest(url, {
       email: data.email, password: data.password,
@@ -1419,6 +1424,6 @@ window.addEventListener("hashchange", () => {
   render();
 });
 
-loadConfig().then(() => render()).catch((error) => {
-  app.innerHTML = `${pageHeader()}<main id="main" class="container page-shell">${empty("Configuration needed", error.message, anchor("/", "Return home", 'class="button"'))}</main>${footer()}`;
-});
+// Render immediately. The public pages (including home) don't need /api/config;
+// anything that does (auth, data) loads it on demand and shows its own error.
+render();
