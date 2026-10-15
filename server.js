@@ -29,10 +29,17 @@ const mime = {
   ".js": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
   ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
   ".svg": "image/svg+xml",
   ".txt": "text/plain; charset=utf-8",
   ".webp": "image/webp",
+  ".woff2": "font/woff2",
 };
+
+// Only these files (and everything inside /public/) may be served to the browser.
+// This keeps .env, server.js, package.json, supabase/ and drizzle/ private.
+const publicFiles = new Set(["/index.html", "/main.js", "/styles.css", "/favicon.ico"]);
 
 function json(res, status, value) {
   res.writeHead(status, {
@@ -332,34 +339,61 @@ async function api(req, res, pathname) {
   return json(res, 404, { error: "API route not found." });
 }
 
+async function sendIndex(req, res) {
+  const contents = await readFile(resolve(root, "index.html"));
+  res.writeHead(200, {
+    "content-type": mime[".html"],
+    "cache-control": "no-cache",
+    "x-content-type-options": "nosniff",
+  });
+  return res.end(req.method === "HEAD" ? undefined : contents);
+}
+
 async function staticFile(req, res, pathname) {
-  let requested = decodeURIComponent(pathname);
-  if (requested === "/") requested = "/index.html";
-  if (requested === "/favicon.ico") requested = "/public/favicon.ico";
-  const candidate = resolve(root, `.${requested}`);
-  if (candidate !== root && !candidate.startsWith(root + sep)) {
-    res.writeHead(403);
-    return res.end("Forbidden");
-  }
+  let requested;
   try {
-    const fileStat = await stat(candidate);
-    if (!fileStat.isFile()) throw new Error("Not a file");
-    const contents = await readFile(candidate);
-    res.writeHead(200, {
-      "content-type": mime[extname(candidate)] || "application/octet-stream",
-      "x-content-type-options": "nosniff",
-      "cache-control": candidate.endsWith(".html") ? "no-cache" : "public, max-age=300",
-    });
-    return res.end(contents);
+    requested = decodeURIComponent(pathname);
   } catch {
-    if (pathname.includes(".")) {
-      res.writeHead(404);
-      return res.end("Not found");
-    }
-    const contents = await readFile(resolve(root, "index.html"));
-    res.writeHead(200, { "content-type": mime[".html"], "cache-control": "no-cache" });
-    return res.end(contents);
+    res.writeHead(400);
+    return res.end("Bad request");
   }
+
+  // Home page: "/" and "/index.html" always open the app.
+  if (requested === "/" || requested === "/index.html") return sendIndex(req, res);
+  if (requested === "/favicon.ico") requested = "/public/favicon.ico";
+
+  const allowed = publicFiles.has(requested) || requested.startsWith("/public/");
+  if (allowed) {
+    const candidate = resolve(root, `.${requested}`);
+    if (candidate.startsWith(root + sep)) {
+      try {
+        const fileStat = await stat(candidate);
+        if (fileStat.isFile()) {
+          const contents = await readFile(candidate);
+          res.writeHead(200, {
+            "content-type": mime[extname(candidate).toLowerCase()] || "application/octet-stream",
+            "x-content-type-options": "nosniff",
+            "cache-control": "public, max-age=300",
+          });
+          return res.end(req.method === "HEAD" ? undefined : contents);
+        }
+      } catch {
+        // fall through
+      }
+    }
+    // A missing asset should 404, not return the app shell.
+    res.writeHead(404);
+    return res.end("Not found");
+  }
+
+  // Anything else that looks like a file (has an extension) is not public.
+  if (/\.[a-z0-9]+$/i.test(requested)) {
+    res.writeHead(404);
+    return res.end("Not found");
+  }
+
+  // Client-side routes (/join, /athlete/login, /blog/some-post, ...) get the app shell.
+  return sendIndex(req, res);
 }
 
 const server = createServer(async (req, res) => {
@@ -373,6 +407,7 @@ const server = createServer(async (req, res) => {
   } catch (error) {
     const status = Number(error?.status) || 500;
     if (status >= 500) console.error("[server]", error);
+    if (res.headersSent) return res.end();
     return json(res, status, { error: error?.message || "An unexpected server error occurred." });
   }
 });
