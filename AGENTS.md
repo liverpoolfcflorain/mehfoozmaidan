@@ -11,3 +11,4 @@
 
 - Use the installed Lovable Cloud OAuth browser SDK for social login and return to a public login page before entering a portal; raw provider authorization lacks managed credentials.
 - The current server must honor the development runner's `--port` argument so the preview can reach the app.
+- Keep `build` and `build:dev` preparing the existing browser files and OAuth SDK in `dist`, with a no-emit JavaScript TypeScript configuration; the build runner requires both a build command and compiler configuration.
