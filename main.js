@@ -969,6 +969,11 @@ async function assistantPage() {
 
 function parseOAuthReturn() {
   const hash = new URLSearchParams(location.hash.replace(/^#/, ""));
+  if (hash.has("error_description")) {
+    toast(hash.get("error_description") || "Sign-in was cancelled. Please try again.", "error");
+    history.replaceState({}, "", `${location.pathname}${location.search}`);
+    return;
+  }
   const access = hash.get("access_token");
   const refresh = hash.get("refresh_token");
   if (!access || !refresh) return;
@@ -999,6 +1004,14 @@ async function render() {
     else if (path === "/reset-password") app.innerHTML = resetPasswordPage();
     else if (loginRole) {
       state.session = await currentSession();
+      if (state.session?.user && loginRole !== "admin") {
+        const profile = await loadProfile(loginRole, state.session.user.id);
+        const actualRole = profile.base?.primary_role;
+        const destination = ["athlete", "sports", "lawyer"].includes(actualRole) ? actualRole : loginRole;
+        history.replaceState({}, "", `/${destination}`);
+        state.renderPending = true;
+        return;
+      }
       state.authMode = state.authMode || "signin";
       app.innerHTML = authPage(loginRole);
     } else if (portal) await renderPortal(portal.role, portal.section);
@@ -1327,12 +1340,17 @@ document.addEventListener("click", async (event) => {
       const input = form?.elements.namedItem("message");
       if (input) { input.value = element.dataset.text; form.requestSubmit(); }
     } else if (action === "google-login") {
-      const config = await loadConfig();
-      const url = new URL(`${config.supabaseUrl}/auth/v1/authorize`);
-      url.searchParams.set("provider", "google");
-      url.searchParams.set("redirect_to", `${location.origin}/athlete`);
-      url.searchParams.set("apikey", config.publishableKey);
-      location.assign(url);
+      const { createLovableAuth } = await import("/public/cloud-auth.js");
+      const lovable = { auth: createLovableAuth() };
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: `${location.origin}/athlete/login`,
+      });
+      if (result.error) throw result.error;
+      if (result.redirected) return;
+      if (!result.tokens?.access_token || !result.tokens.refresh_token) throw new Error("Sign-in did not complete. Please try again.");
+      const user = await authRequest("/auth/v1/user", undefined, { token: result.tokens.access_token, method: "GET" });
+      storeSession({ ...result.tokens, user, expires_at: Math.floor(Date.now() / 1000) + 3600 });
+      navigate("/athlete/login");
     }
   } catch (error) {
     toast(error.message || "That action could not be completed.", "error");
