@@ -9,6 +9,8 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
+    "build": "bun run check && node scripts/build.mjs",
+    "build:dev": "bun run build",
     "check": "node --check server.js && node --check main.js"
   },
   "dependencies": {
