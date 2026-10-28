@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Use the installed Lovable Cloud OAuth browser SDK for social login and return to a public login page before entering a portal; raw provider authorization lacks managed credentials.
+- The current server must honor the development runner's `--port` argument so the preview can reach the app.

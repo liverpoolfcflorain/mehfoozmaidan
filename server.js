@@ -5,7 +5,8 @@ import { extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL(".", import.meta.url)));
-const port = Number(process.env.PORT || 3000);
+const portArgument = process.argv.indexOf("--port");
+const port = Number(process.argv[portArgument + 1] && portArgument >= 0 ? process.argv[portArgument + 1] : process.env.PORT || 3000);
 const supabaseUrl = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || "").replace(/\/+$/, "");
 const publicKey = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "";
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
@@ -361,6 +362,12 @@ async function staticFile(req, res, pathname) {
   // Home page: "/" and "/index.html" always open the app.
   if (requested === "/" || requested === "/index.html") return sendIndex(req, res);
   if (requested === "/favicon.ico") requested = "/public/favicon.ico";
+  // Serve only the installed browser OAuth SDK, never arbitrary dependency files.
+  if (requested === "/public/cloud-auth.js") {
+    const contents = await readFile(resolve(root, "node_modules/@lovable.dev/cloud-auth-js/dist/index.js"));
+    res.writeHead(200, { "content-type": mime[".js"], "cache-control": "no-cache", "x-content-type-options": "nosniff" });
+    return res.end(req.method === "HEAD" ? undefined : contents);
+  }
 
   const allowed = publicFiles.has(requested) || requested.startsWith("/public/");
   if (allowed) {
