@@ -1004,22 +1004,30 @@ async function assistantPage() {
 }
 
 function parseOAuthReturn() {
-  const hash = new URLSearchParams(location.hash.replace(/^#/, ""));
-  if (hash.has("error_description")) {
-    toast(hash.get("error_description") || "Sign-in was cancelled. Please try again.", "error");
-    history.replaceState({}, "", `${location.pathname}${location.search}`);
+  // The sign-in service can return tokens in the URL hash or the query string.
+  const params = new URLSearchParams(location.hash.replace(/^#/, ""));
+  const query = new URLSearchParams(location.search);
+  for (const key of ["access_token", "refresh_token", "expires_in", "error", "error_description"]) {
+    if (!params.has(key) && query.has(key)) params.set(key, query.get(key));
+  }
+  if (params.has("error") || params.has("error_description")) {
+    toast(params.get("error_description") || "Sign-in was cancelled. Please try again.", "error");
+    history.replaceState({}, "", location.pathname);
     return;
   }
-  const access = hash.get("access_token");
-  const refresh = hash.get("refresh_token");
+  const access = params.get("access_token");
+  const refresh = params.get("refresh_token");
   if (!access || !refresh) return;
-  const expiresIn = Number(hash.get("expires_in") || 3600);
+  const expiresIn = Number(params.get("expires_in") || 3600);
   storeSession({
     access_token: access, refresh_token: refresh,
     expires_at: Math.floor(Date.now() / 1000) + expiresIn,
     user: null,
   });
-  history.replaceState({}, "", `${location.pathname}${location.search}`);
+  // Land on a known sign-in route (it forwards to the right portal) so an
+  // unexpected return address can never show "Page not found" after sign-in.
+  const { portal, loginRole } = pathData();
+  history.replaceState({}, "", portal || loginRole ? location.pathname : "/athlete/login");
 }
 
 function currentRoute() {
