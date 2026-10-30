@@ -908,6 +908,37 @@ async function notificationsPage(userId) {
   return `${dashboardTitle("Notifications", "Updates about your profile, applications and conversations.")}${items ? `<div class="list-stack">${items}</div>` : empty("You're all caught up", "New updates will appear here.")}`;
 }
 
+async function suggestionsPage(role, session) {
+  const rows = await dbRequest("suggestions", {
+    select: "*",
+    filters: { user_id: `eq.${session.user.id}` },
+    order: "created_at.desc",
+    limit: 50,
+  }).catch(() => []);
+  const items = (rows || []).map((item) => `<article class="item-card"><div class="card-top"><div><h3>${escapeHtml(item.subject)}</h3><p>${escapeHtml(item.body)}</p></div>${statusPill(item.status)}</div>
+    ${item.admin_notes ? `<p class="small muted">Team note: ${escapeHtml(item.admin_notes)}</p>` : ""}
+    <p class="small muted">Sent ${escapeHtml(dateText(item.created_at, { dateStyle: "medium", timeStyle: "short" }))}</p></article>`).join("");
+  return `${dashboardTitle("Suggestions", "Help us improve Mehfooz Maidan. Every suggestion is stored safely and reviewed by the team.")}
+    <form class="panel form" data-form="suggestion" data-role="${role}">
+      ${field("Subject", "subject", "", { required: true, placeholder: "What is your suggestion about?" })}
+      ${field("Your suggestion", "body", "", { textarea: true, required: true, placeholder: "Tell us what would make the platform better for you." })}
+      <button class="button" type="submit">Send suggestion</button>
+    </form>
+    ${items ? `<h2 style="margin-top:2rem;font-size:1.4rem">Your suggestions</h2><div class="list-stack">${items}</div>` : ""}`;
+}
+
+async function adminSuggestions() {
+  const rows = await dbRequest("suggestions", {
+    select: "*,profile:user_id(full_name,primary_role)",
+    order: "created_at.desc",
+    limit: 100,
+  }).catch(() => []);
+  const cards = (rows || []).map((item) => `<article class="item-card"><div class="card-top"><div><p class="eyebrow">${escapeHtml(roles[item.role] || item.role || "Member")}</p><h3>${escapeHtml(item.subject)}</h3><p>${escapeHtml(item.profile?.full_name || "Member")}</p></div>${statusPill(item.status)}</div>
+    <p>${escapeHtml(item.body)}</p><p class="small muted">Sent ${escapeHtml(dateText(item.created_at, { dateStyle: "medium", timeStyle: "short" }))}</p>
+    <div class="card-actions">${["reviewing", "planned", "done", "declined"].map((status) => `<button class="button button-outline button-small" data-action="suggestion-status" data-id="${escapeHtml(item.id)}" data-status="${status}">${titleCase(status)}</button>`).join("")}</div></article>`).join("");
+  return `${dashboardTitle("Suggestions", "Member suggestions from every portal. Record a decision so members see the outcome.")}${cards ? `<div class="list-stack">${cards}</div>` : empty("No suggestions yet", "Suggestions submitted by members will appear here.")}`;
+}
+
 async function adminPeople(section) {
   const tables = section === "verification" ? Object.entries(profileTables) : [[section === "athletes" ? "athlete" : section, profileTables[section === "athletes" ? "athlete" : section]]];
   const data = await Promise.all(tables.map(async ([role, table]) => {
