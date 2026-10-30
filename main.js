@@ -917,12 +917,14 @@ async function suggestionsPage(role, session) {
     limit: 50,
   }).catch(() => []);
   const items = (rows || []).map((item) => `<article class="item-card"><div class="card-top"><div><h3>${escapeHtml(item.subject)}</h3><p>${escapeHtml(item.body)}</p></div>${statusPill(item.status)}</div>
+    ${item.legal_impact ? `<p class="small"><strong>Legal impact:</strong> ${escapeHtml(item.legal_impact)}</p>` : ""}
     ${item.admin_notes ? `<p class="small muted">Team note: ${escapeHtml(item.admin_notes)}</p>` : ""}
     <p class="small muted">Sent ${escapeHtml(dateText(item.created_at, { dateStyle: "medium", timeStyle: "short" }))}</p></article>`).join("");
   return `${dashboardTitle("Suggestions", "Help us improve Mehfooz Maidan. Every suggestion is stored safely and reviewed by the team.")}
     <form class="panel form" data-form="suggestion" data-role="${role}">
       ${field("Subject", "subject", "", { required: true, placeholder: "What is your suggestion about?" })}
       ${field("Your suggestion", "body", "", { textarea: true, required: true, placeholder: "Tell us what would make the platform better for you." })}
+      ${field("Legal impact", "legal_impact", "", { textarea: true, placeholder: "Could this idea affect laws, contracts, consent, privacy or the safety of minors? Describe any legal concerns or benefits (optional)." })}
       <button class="button" type="submit">Send suggestion</button>
     </form>
     ${items ? `<h2 style="margin-top:2rem;font-size:1.4rem">Your suggestions</h2><div class="list-stack">${items}</div>` : ""}`;
@@ -935,7 +937,7 @@ async function adminSuggestions() {
     limit: 100,
   }).catch(() => []);
   const cards = (rows || []).map((item) => `<article class="item-card"><div class="card-top"><div><p class="eyebrow">${escapeHtml(roles[item.role] || item.role || "Member")}</p><h3>${escapeHtml(item.subject)}</h3><p>${escapeHtml(item.profile?.full_name || "Member")}</p></div>${statusPill(item.status)}</div>
-    <p>${escapeHtml(item.body)}</p><p class="small muted">Sent ${escapeHtml(dateText(item.created_at, { dateStyle: "medium", timeStyle: "short" }))}</p>
+    <p>${escapeHtml(item.body)}</p>${item.legal_impact ? `<p class="small"><strong>Legal impact:</strong> ${escapeHtml(item.legal_impact)}</p>` : ""}<p class="small muted">Sent ${escapeHtml(dateText(item.created_at, { dateStyle: "medium", timeStyle: "short" }))}</p>
     <div class="card-actions">${["reviewing", "planned", "done", "declined"].map((status) => `<button class="button button-outline button-small" data-action="suggestion-status" data-id="${escapeHtml(item.id)}" data-status="${status}">${titleCase(status)}</button>`).join("")}</div></article>`).join("");
   return `${dashboardTitle("Suggestions", "Member suggestions from every portal. Record a decision so members see the outcome.")}${cards ? `<div class="list-stack">${cards}</div>` : empty("No suggestions yet", "Suggestions submitted by members will appear here.")}`;
 }
@@ -1460,8 +1462,9 @@ document.addEventListener("submit", async (event) => {
       const values = new FormData(form);
       const subject = String(values.get("subject") || "").trim();
       const body = String(values.get("body") || "").trim();
+      const legalImpact = String(values.get("legal_impact") || "").trim();
       if (subject.length < 3 || body.length < 10) throw new Error("Add a subject (3+ characters) and a suggestion (10+ characters).");
-      await dbRequest("suggestions", { method: "POST", body: { user_id: user.id, role: form.dataset.role, subject: subject.slice(0, 200), body: body.slice(0, 4000) } });
+      await dbRequest("suggestions", { method: "POST", body: { user_id: user.id, role: form.dataset.role, subject: subject.slice(0, 200), body: body.slice(0, 4000), legal_impact: legalImpact ? legalImpact.slice(0, 4000) : null } });
       toast("Thank you — your suggestion has been stored and the team will review it.", "success");
       render();
     }
