@@ -962,6 +962,50 @@ export type Database = {
           },
         ]
       }
+      suggestions: {
+        Row: {
+          admin_notes: string | null
+          body: string
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          body: string
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          body?: string
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          status?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "suggestions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string
