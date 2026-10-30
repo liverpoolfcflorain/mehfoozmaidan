@@ -20,7 +20,7 @@ const portalLinks = {
     ["", "Overview"], ["profile", "Profile & portfolio"], ["opportunities", "Discover opportunities"],
     ["applications", "Applications & invitations"], ["network", "Connections & saved"], ["messages", "Messages"],
     ["legal", "Legal assistance"], ["contracts", "Contract Studio"], ["assistant", "AI Assistant"],
-    ["notifications", "Notifications"], ["settings", "Settings"],
+    ["suggestions", "Suggestions"], ["notifications", "Notifications"], ["settings", "Settings"],
   ],
   sports: [
     ["", "Overview"], ["profile", "Profile & verification"], ["discover", "Athlete discovery"],
@@ -35,7 +35,7 @@ const portalLinks = {
   ],
   admin: [
     ["", "Analytics"], ["verification", "Verification"], ["athletes", "Athletes"], ["sports", "Sports & organisations"],
-    ["lawyers", "Lawyers"], ["reports", "Reports & safeguarding"], ["content", "Content & blog"],
+    ["lawyers", "Lawyers"], ["reports", "Reports & safeguarding"], ["suggestions", "Suggestions"], ["content", "Content & blog"],
     ["media", "Media & mission video"], ["audit", "Audit log"],
   ],
 };
@@ -607,10 +607,12 @@ async function portalContent(role, section, data, session) {
   if ((section === "requests" || section === "matters") && role === "lawyer") return lawyerRequests(userId, section === "matters");
   if (section === "contracts") return contractsPage(role, userId);
   if (section === "assistant") return assistantPage();
+  if (section === "suggestions") return suggestionsPage(role, session);
   if (section === "notifications") return notificationsPage(userId);
   if (role === "admin") {
     if (["verification", "athletes", "sports", "lawyers"].includes(section)) return adminPeople(section);
     if (section === "reports") return adminReports();
+    if (section === "suggestions") return adminSuggestions();
     if (section === "content") return adminContent();
     if (section === "media") return `${dashboardTitle("Media & mission video", "Publish original mission media when it has been approved by the team.")}${empty("No media published yet", "The mission film will appear on the public site when the team publishes it.")}`;
     if (section === "audit") return adminAudit();
