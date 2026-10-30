@@ -20,7 +20,7 @@ const portalLinks = {
     ["", "Overview"], ["profile", "Profile & portfolio"], ["opportunities", "Discover opportunities"],
     ["applications", "Applications & invitations"], ["network", "Connections & saved"], ["messages", "Messages"],
     ["legal", "Legal assistance"], ["contracts", "Contract Studio"], ["assistant", "AI Assistant"],
-    ["notifications", "Notifications"], ["settings", "Settings"],
+    ["suggestions", "Suggestions"], ["notifications", "Notifications"], ["settings", "Settings"],
   ],
   sports: [
     ["", "Overview"], ["profile", "Profile & verification"], ["discover", "Athlete discovery"],
@@ -35,7 +35,7 @@ const portalLinks = {
   ],
   admin: [
     ["", "Analytics"], ["verification", "Verification"], ["athletes", "Athletes"], ["sports", "Sports & organisations"],
-    ["lawyers", "Lawyers"], ["reports", "Reports & safeguarding"], ["content", "Content & blog"],
+    ["lawyers", "Lawyers"], ["reports", "Reports & safeguarding"], ["suggestions", "Suggestions"], ["content", "Content & blog"],
     ["media", "Media & mission video"], ["audit", "Audit log"],
   ],
 };
@@ -607,10 +607,12 @@ async function portalContent(role, section, data, session) {
   if ((section === "requests" || section === "matters") && role === "lawyer") return lawyerRequests(userId, section === "matters");
   if (section === "contracts") return contractsPage(role, userId);
   if (section === "assistant") return assistantPage();
+  if (section === "suggestions") return suggestionsPage(role, session);
   if (section === "notifications") return notificationsPage(userId);
   if (role === "admin") {
     if (["verification", "athletes", "sports", "lawyers"].includes(section)) return adminPeople(section);
     if (section === "reports") return adminReports();
+    if (section === "suggestions") return adminSuggestions();
     if (section === "content") return adminContent();
     if (section === "media") return `${dashboardTitle("Media & mission video", "Publish original mission media when it has been approved by the team.")}${empty("No media published yet", "The mission film will appear on the public site when the team publishes it.")}`;
     if (section === "audit") return adminAudit();
@@ -656,7 +658,8 @@ function profilePage(role, data) {
     ${p.status === "submitted" ? notice("Your profile is awaiting review. You can still edit, but resubmission is not needed.") : ""}
     <form class="panel profile-sections" data-form="profile" data-role="${role}">${sections}
       <div class="toolbar"><button class="button button-outline" type="submit" name="submit_mode" value="save">Save profile</button><button class="button" type="submit" name="submit_mode" value="submit">Submit for verification</button></div>
-    </form>`;
+    </form>
+    <div class="panel" style="margin-top:1.2rem"><div class="card-top"><div><h3>Have a suggestion?</h3><p>Tell us what would make this platform better — every suggestion is stored and reviewed by the team.</p></div>${anchor(`/${role}/suggestions`, "Open Suggestions", 'class="button button-outline"')}</div></div>`;
 }
 
 function settingsPage(profile) {
@@ -904,6 +907,37 @@ async function notificationsPage(userId) {
   const items = (rows || []).map((item) => `<article class="item-card"><div class="card-top"><div><h3>${escapeHtml(item.title || titleCase(item.type || "Notification"))}</h3><p>${escapeHtml(item.body || item.message || "")}</p></div>${item.read_at ? "" : statusPill("unread")}</div><p class="small muted">${escapeHtml(dateText(item.created_at, { dateStyle: "medium", timeStyle: "short" }))}</p>
     ${!item.read_at ? `<button class="button button-outline button-small" data-action="mark-read" data-id="${escapeHtml(item.id)}">Mark as read</button>` : ""}</article>`).join("");
   return `${dashboardTitle("Notifications", "Updates about your profile, applications and conversations.")}${items ? `<div class="list-stack">${items}</div>` : empty("You're all caught up", "New updates will appear here.")}`;
+}
+
+async function suggestionsPage(role, session) {
+  const rows = await dbRequest("suggestions", {
+    select: "*",
+    filters: { user_id: `eq.${session.user.id}` },
+    order: "created_at.desc",
+    limit: 50,
+  }).catch(() => []);
+  const items = (rows || []).map((item) => `<article class="item-card"><div class="card-top"><div><h3>${escapeHtml(item.subject)}</h3><p>${escapeHtml(item.body)}</p></div>${statusPill(item.status)}</div>
+    ${item.admin_notes ? `<p class="small muted">Team note: ${escapeHtml(item.admin_notes)}</p>` : ""}
+    <p class="small muted">Sent ${escapeHtml(dateText(item.created_at, { dateStyle: "medium", timeStyle: "short" }))}</p></article>`).join("");
+  return `${dashboardTitle("Suggestions", "Help us improve Mehfooz Maidan. Every suggestion is stored safely and reviewed by the team.")}
+    <form class="panel form" data-form="suggestion" data-role="${role}">
+      ${field("Subject", "subject", "", { required: true, placeholder: "What is your suggestion about?" })}
+      ${field("Your suggestion", "body", "", { textarea: true, required: true, placeholder: "Tell us what would make the platform better for you." })}
+      <button class="button" type="submit">Send suggestion</button>
+    </form>
+    ${items ? `<h2 style="margin-top:2rem;font-size:1.4rem">Your suggestions</h2><div class="list-stack">${items}</div>` : ""}`;
+}
+
+async function adminSuggestions() {
+  const rows = await dbRequest("suggestions", {
+    select: "*,profile:user_id(full_name,primary_role)",
+    order: "created_at.desc",
+    limit: 100,
+  }).catch(() => []);
+  const cards = (rows || []).map((item) => `<article class="item-card"><div class="card-top"><div><p class="eyebrow">${escapeHtml(roles[item.role] || item.role || "Member")}</p><h3>${escapeHtml(item.subject)}</h3><p>${escapeHtml(item.profile?.full_name || "Member")}</p></div>${statusPill(item.status)}</div>
+    <p>${escapeHtml(item.body)}</p><p class="small muted">Sent ${escapeHtml(dateText(item.created_at, { dateStyle: "medium", timeStyle: "short" }))}</p>
+    <div class="card-actions">${["reviewing", "planned", "done", "declined"].map((status) => `<button class="button button-outline button-small" data-action="suggestion-status" data-id="${escapeHtml(item.id)}" data-status="${status}">${titleCase(status)}</button>`).join("")}</div></article>`).join("");
+  return `${dashboardTitle("Suggestions", "Member suggestions from every portal. Record a decision so members see the outcome.")}${cards ? `<div class="list-stack">${cards}</div>` : empty("No suggestions yet", "Suggestions submitted by members will appear here.")}`;
 }
 
 async function adminPeople(section) {
@@ -1330,6 +1364,9 @@ document.addEventListener("click", async (event) => {
     } else if (action === "report-status") {
       await dbRequest("reports", { method: "PATCH", filters: { id: `eq.${id}` }, body: { status: element.dataset.status } });
       toast("Report updated.", "success"); render();
+    } else if (action === "suggestion-status") {
+      await dbRequest("suggestions", { method: "PATCH", filters: { id: `eq.${id}` }, body: { status: element.dataset.status } });
+      toast("Suggestion updated.", "success"); render();
     } else if (action === "assistant-toggle") {
       state.assistantOpen = !state.assistantOpen;
       document.querySelector(".assistant-dialog")?.classList.toggle("open", state.assistantOpen);
@@ -1418,6 +1455,16 @@ document.addEventListener("submit", async (event) => {
       await dbRequest("messages", { method: "POST", body: { conversation_id: form.dataset.conversation, sender_id: user.id, body: body.slice(0, 5000) } });
       state.activeConversation = form.dataset.conversation; render();
     } else if (type === "assistant") await submitAssistant(form);
+    else if (type === "suggestion") {
+      const user = (await currentSession())?.user;
+      const values = new FormData(form);
+      const subject = String(values.get("subject") || "").trim();
+      const body = String(values.get("body") || "").trim();
+      if (subject.length < 3 || body.length < 10) throw new Error("Add a subject (3+ characters) and a suggestion (10+ characters).");
+      await dbRequest("suggestions", { method: "POST", body: { user_id: user.id, role: form.dataset.role, subject: subject.slice(0, 200), body: body.slice(0, 4000) } });
+      toast("Thank you — your suggestion has been stored and the team will review it.", "success");
+      render();
+    }
   } catch (error) {
     toast(error.message || "Could not save your changes.", "error");
   }
