@@ -968,6 +968,7 @@ export type Database = {
           body: string
           created_at: string
           id: string
+          legal_impact: string | null
           role: Database["public"]["Enums"]["app_role"]
           status: string
           subject: string
@@ -979,6 +980,7 @@ export type Database = {
           body: string
           created_at?: string
           id?: string
+          legal_impact?: string | null
           role: Database["public"]["Enums"]["app_role"]
           status?: string
           subject: string
@@ -990,6 +992,7 @@ export type Database = {
           body?: string
           created_at?: string
           id?: string
+          legal_impact?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           status?: string
           subject?: string
@@ -1023,6 +1026,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      verification_certificates: {
+        Row: {
+          certificate_no: string
+          details: Json
+          holder_name: string
+          id: string
+          issued_at: string
+          issued_by: string | null
+          revoked_at: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          certificate_no?: string
+          details?: Json
+          holder_name: string
+          id?: string
+          issued_at?: string
+          issued_by?: string | null
+          revoked_at?: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          certificate_no?: string
+          details?: Json
+          holder_name?: string
+          id?: string
+          issued_at?: string
+          issued_by?: string | null
+          revoked_at?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "verification_certificates_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       verification_decisions: {
         Row: {
@@ -1089,6 +1136,7 @@ export type Database = {
         Args: { _target: string; _uid: string }
         Returns: boolean
       }
+      check_certificate: { Args: { _no: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

@@ -9,6 +9,5 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-- Use the installed Lovable Cloud OAuth browser SDK for social login and return to a public login page before entering a portal; raw provider authorization lacks managed credentials.
-- The current server must honor the development runner's `--port` argument so the preview can reach the app.
-- Keep `build` and `build:dev` preparing the existing browser files and OAuth SDK in `dist`, with a no-emit JavaScript TypeScript configuration; the build runner requires both a build command and compiler configuration.
+- The Mehfooz Maidan UI is the original vanilla JS app in `src/legacy/app.js`, mounted by `LegacyApp` from the `/` and `/$` routes; it talks to the database directly and to `/api/*` server routes (`src/server/*.server.ts`). Why: preserves the migrated app's behaviour without a rewrite.
+- Verification certificates are issued by a database trigger when a profile becomes approved and rendered as PDF by `/api/certificate` (pdf-lib). Why: proof exists only for admin-approved profiles.

@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1791706266966,
-      "tag": "0000_migration",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1791989807161,
-      "tag": "0001_migration",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1791991208319,
-      "tag": "0002_restrict_profiles_read",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1793337743498,
-      "tag": "0003_create_suggestions",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1793350000000,
-      "tag": "0004_suggestions_legal_impact",
+      "when": 1793420312519,
+      "tag": "0000_mehfooz_schema",
       "breakpoints": true
     }
   ]
